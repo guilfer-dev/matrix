@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Matrix Droping Letters</title>
+</head>
+
+<body>
+
+    <script>
+
+        const states = {
+            x: 0,
+            y: 0,
+            style: {},
+            count: 0
+        };
+
+        function randomStart() {
+            states.x = randomNumber(0, 100);
+            states.y = randomNumber(0, 100);
+            states.style.color = `rgba( 0, ${randomNumber(0, 255)}, 0, ${randomNumber(0, 100)}`;
+            states.style.fontWeight = randomNumber(0, 9) * 100;
+            states.style.fontSize = Math.random() * (1.2 - .5 + 1) + .5 + 'em';
+        }
+
+        function randomNumber(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        function painter() {
+            setInterval(() => {
+                const char = String.fromCharCode(randomNumber(0, 65535));
+                const el = document.createElement('p');
+                el.textContent = char;
+
+                if (states.count > randomNumber(5, 50)) {
+                    randomStart();
+                    states.count = 0;
+                } else {
+                    el.style.color = states.style.color;
+                    el.style.fontWeight = states.style.fontWeight;
+                    el.style.fontSize = states.style.fontSize;
+                    el.style.top = states.y + '%';
+                    el.style.left = states.x + '%';
+                    if (states.y + 3 < 100) {
+                        states.y += 3;
+                        states.count++;
+                    }
+                    else {
+                        randomStart();
+                        states.count = 0;
+                    }
+                }
+
+                document.body.appendChild(el);
+            }, 200);
+        }
+
+        function start(numberOfPainters) {
+            randomStart();
+            for (let i = 0; i < numberOfPainters; i++) {
+                painter();
+            }
+        }
+
+        start(1);
+
+    </script>
+</body>
+
+</html>
