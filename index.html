@@ -10,65 +10,73 @@
 </head>
 
 <body>
+    <main>
+        <canvas id="matrix" width="1920" height="1080"></canvas>
+    </main>
+    <script type="module">
+        import { recipes } from './sushiRecipes.js'
 
-    <script>
+        const canvas = document.getElementById('matrix');
+        const ctx = canvas.getContext('2d');
 
-        const states = {
-            x: 0,
-            y: 0,
-            style: {},
-            count: 0
+        function randomStates() {
+            const x = Math.floor(canvas.width * Math.random());
+            const y = Math.floor(canvas.height * Math.random());
+            const greenShade = randomNumber(0, 255);
+            const alpha = randomNumber(30, 100) / 100;
+            const fontSize = randomNumber(10, 50);
+            const count = 0;
+            return {
+                x,
+                y,
+                greenShade,
+                alpha,
+                fontSize,
+                count,
+            };
         };
-
-        function randomStart() {
-            states.x = randomNumber(0, 100);
-            states.y = randomNumber(0, 100);
-            states.style.color = `rgba( 0, ${randomNumber(0, 255)}, 0, ${randomNumber(0, 100)}`;
-            states.style.fontWeight = randomNumber(0, 9) * 100;
-            states.style.fontSize = Math.random() * (1.2 - .5 + 1) + .5 + 'em';
-        }
 
         function randomNumber(min, max) {
             return Math.floor(Math.random() * (max - min + 1)) + min;
         }
 
+
         function painter() {
+            let states = randomStates()
             setInterval(() => {
-                const char = String.fromCharCode(randomNumber(0, 65535));
-                const el = document.createElement('p');
-                el.textContent = char;
 
-                if (states.count > randomNumber(5, 50)) {
-                    randomStart();
-                    states.count = 0;
+                let recipe = recipes[randomNumber(0, 4)];
+                let text = recipe[randomNumber(0, recipe.length - 1)];
+                const tempCount = states.count;
+
+                if (states.count <= text.length - 1) {
+
+                    if (states.y + states.fontSize > 1080) {
+                        states = randomStates()
+                        states.count = tempCount;
+                    }
+
+                    ctx.fillStyle = `rgba( 0, ${states.greenShade}, 0, ${states.alpha}`;
+                    ctx.font = `${states.fontSize + 'px Arial'}`;
+                    ctx.fillText(text[states.count], states.x, states.y);
+                    states.y += states.fontSize;
+                    states.count++;
+
                 } else {
-                    el.style.color = states.style.color;
-                    el.style.fontWeight = states.style.fontWeight;
-                    el.style.fontSize = states.style.fontSize;
-                    el.style.top = states.y + '%';
-                    el.style.left = states.x + '%';
-                    if (states.y + 3 < 100) {
-                        states.y += 3;
-                        states.count++;
-                    }
-                    else {
-                        randomStart();
-                        states.count = 0;
-                    }
+                    states = randomStates();
+                    recipe = recipes[randomNumber(0, 4)];
+                    text = recipe[randomNumber(0, recipe.length - 1)];
                 }
-
-                document.body.appendChild(el);
-            }, 200);
+            }, randomNumber(50, 500));
         }
 
         function start(numberOfPainters) {
-            randomStart();
             for (let i = 0; i < numberOfPainters; i++) {
-                painter();
+                painter()
             }
         }
 
-        start(1);
+        start(5);
 
     </script>
 </body>
