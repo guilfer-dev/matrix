@@ -11,12 +11,14 @@
 
 <body>
     <main>
-        <canvas id="matrix" width="1920" height="1080"></canvas>
+        <canvas id="matrix"></canvas>
     </main>
     <script type="module">
         import { recipes } from './sushiRecipes.js'
 
         const canvas = document.getElementById('matrix');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
         const ctx = canvas.getContext('2d');
 
         function randomStates() {
