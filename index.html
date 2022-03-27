@@ -43,19 +43,19 @@
 
         function painter() {
             let states = randomStates()
+            let recipe = recipes[randomNumber(0, recipes.length - 1)];
+            let text = recipe[randomNumber(0, recipe.length - 1)];
+
             setInterval(() => {
 
-                let recipe = recipes[randomNumber(0, 4)];
-                let text = recipe[randomNumber(0, recipe.length - 1)];
                 const tempCount = states.count;
 
                 if (states.count <= text.length - 1) {
 
-                    if (states.y + states.fontSize > 1080) {
+                    if (states.y + states.fontSize >= 1080) {
                         states = randomStates()
                         states.count = tempCount;
                     }
-
                     ctx.fillStyle = `rgba( 0, ${states.greenShade}, 0, ${states.alpha}`;
                     ctx.font = `${states.fontSize + 'px Arial'}`;
                     ctx.fillText(text[states.count], states.x, states.y);
@@ -64,7 +64,7 @@
 
                 } else {
                     states = randomStates();
-                    recipe = recipes[randomNumber(0, 4)];
+                    recipe = recipes[randomNumber(0, recipes.length - 1)];
                     text = recipe[randomNumber(0, recipe.length - 1)];
                 }
             }, randomNumber(50, 500));
