@@ -17,8 +17,11 @@
         import { recipes } from './sushiRecipes.js'
 
         const canvas = document.getElementById('matrix');
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
+        function setCanvasSize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
         const ctx = canvas.getContext('2d');
 
         function randomStates() {
@@ -73,6 +76,8 @@
         }
 
         function start(numberOfPainters) {
+            setCanvasSize();
+            window.addEventListener('resize', setCanvasSize);
             for (let i = 0; i < numberOfPainters; i++) {
                 painter()
             }
